@@ -10,6 +10,10 @@ def home():
 def name(name):
     return f"Name: {name}"
 
+@app.route("/admin")
+def admin():
+    return redirect(url_for("home"))
+
 
 
 
