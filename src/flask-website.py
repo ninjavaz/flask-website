@@ -1,6 +1,7 @@
-from flask import Flask, redirect, url_for, render_template
+from flask import Flask, redirect, url_for, render_template, request, session
 
 app = Flask(__name__)
+app.secret_key = "hello"
 
 @app.route("/")
 def home():
@@ -8,10 +9,20 @@ def home():
 
 @app.route("/login", methods=["POST", "GET"])
 def login():
-    return render_template()
+    if request.method == "POST":
+        user = request.form["nm"]
+        session["user"] = user
+        return redirect(url_for("user", usr=user))
+    else:
+        return render_template("login.html")
+
 @app.route("/<usr>")
 def user(usr):
-    return f"<h1>{usr}</h1>"
+    if "user" in session:
+        user = session["user"]
+        return f"<h1>{user}</h1>"
+    else:
+        return redirect(url_for("login"))
 
 if __name__ == "__main__":
     app.run(debug=True)
